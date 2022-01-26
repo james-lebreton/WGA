@@ -10,15 +10,14 @@
 #' Link to Burke, Finkelstein, & Dusig (1999):
 #'
 #'
-#' @param data Data frame
-#' @param group Grouping/clustering variable
-#' @param item Item on which to estimate rwg
+#' @param x Data frame
+#' @param grpid Grouping/clustering variable
+#' @param scale
 #' @return Estimates AD
 #' @export
 #' @examples
-#' jdw84 <- read.csv("data/jdw84.csv")
-#' AD(data = jdw84, group = "group", item = "x1")
-#'
+#' data(lq2002, package = "multilevel")
+#' AD(x = lq2002[,c(3)], grpid = lq2002$COMPID, scale = c(1,5), model = "consensus")
 
 AD <- function (x, grpid, model, scale)
 {

@@ -21,8 +21,8 @@
 #'         summary of how many negative values were obtained
 #' @export
 #' @examples
-#' data(jdw84)
-#' RWG(x = jdw84$x1, grpid = jdw84$group, scale = c(1,5), model = "consensus", reset = F)
+#' data(lq2002, package = "multilevel")
+#' RWGJ(x = lq2002[,c(3)], grpid = lq2002$COMPID, scale = 5, reset = F)
 #'
 
 RWG <- function (x, grpid, model, scale,reset=F){
