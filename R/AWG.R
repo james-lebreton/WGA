@@ -30,6 +30,9 @@
 #' AWG(x=lq2002[,c(3:13)], grpid = lq2002$COMPID, model = "Consensus", scale=c(1,5))
 #' NOTE: Requires psych & dplyr
 
+data(lq2002, package = "multilevel")
+AWG(x=lq2002$LEAD01, grpid = lq2002$COMPID, model = "consensus", scale = c(1,5))
+
 AWG <- function(x, grpid, model, scale){
   df <- data.frame(grpid = grpid, x)
   df <- na.exclude(df)
@@ -52,12 +55,13 @@ AWG <- function(x, grpid, model, scale){
             awg = 1
           awg}), na.rm = T)
         }
-      else {
-        NA
-        }
+      else
+        {
+          NA
+          }
       })
     grp.size <- lapply(df.grp, nrow)
-    mean.item.var <- lapply(lapply(df.grp, var), mean, na.rm = T)
+    mean.item.var <- lapply(lapply(df.grp, var, na.rm=T), mean, na.rm = T)
     awg.j <- unlist(awg.j)
     grp.name <- names(df.grp)
     grp.size <- unlist(grp.size)
