@@ -15,7 +15,7 @@ Description: This package uses the acronym WGA to stand for 'Within-Group Agreem
              that are frequently used by multilevel researchers to justify data aggregation (rwg, awg, AD).
 Depends: R (>= 4.1.1) 
 Imports: dplyr (>= 1.0.7),
-         multilevel (>= 2.6)
+         multilevel (>= 2.6),
          psych (>= 2.1.9),
          stats (>= 4.1.2)
 License: GPL-3

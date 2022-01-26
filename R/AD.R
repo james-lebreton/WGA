@@ -13,6 +13,9 @@
 #' @param x Item on which to estimate AD
 #' @param model User-supplied description of multilevel measurement model (e.g., consensus)
 #' @param scale Minimum and Maximum Values of the Scale
+#' @param x Data frame
+#' @param grpid Grouping/clustering variable
+#' @param scale
 #' @return Estimates AD
 #' @export
 #' @examples
