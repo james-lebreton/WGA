@@ -38,6 +38,8 @@ WGA <- function(x, grpid, scale, model, reset = F) {
 
   results.ad.mean <- multilevel::ad.m(x=x, grpid = grpid, type = "mean")
   results.ad.median <- multilevel::ad.m(x=x, grpid = grpid, type = "median")
+  results.ad.mean <- ad.m(x=x, grpid = grpid, type = "mean")
+  results.ad.median <- ad.m(x=x, grpid = grpid, type = "median")
   results.ad.mean$AD.M <- round(results.ad.mean$AD.M, 2)
   results.ad.median$AD.M <- round(results.ad.median$AD.M, 2)
 

@@ -5,7 +5,9 @@ devtools::document()
 devtools::build()
 devtools::load_all()
 
-install_github("james-lebreton/WGA")
+install_github("james-lebreton/WGA", lib = "C:/Users/James/Documents/R/win-library/4.1",
+               repos = "http://cran.us.r-project.org")
+
 data(lq2002, package = "multilevel")
 AD(x = lq2002[,c(3)],
    grpid = lq2002$COMPID, scale = c(1,5),
