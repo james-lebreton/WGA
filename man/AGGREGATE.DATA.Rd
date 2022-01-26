@@ -4,16 +4,16 @@
 \alias{AGGREGATE.DATA}
 \title{AGGREGATE.DATA: aggregate data and merge into combined data frame}
 \usage{
-AGGREGATE.DATA(grpid, x, data, aggr.stat)
+AGGREGATE.DATA(grpid.name, x.name, data, aggr.stat)
 }
 \arguments{
-\item{grpid}{Grouping/clustering variable}
+\item{grpid.name}{Name of the grouping/clustering variable}
 
-\item{x}{Items/variables to be aggregated}
+\item{x.name}{Name(s) of the item(s)/variable(s) to be aggregated}
 
 \item{data}{Name of data frame containing group and vars}
 
-\item{method}{Name of the function used to aggregate data}
+\item{aggr.stat}{Name of the function used to aggregate data}
 }
 \value{
 
@@ -27,21 +27,10 @@ The output consists of a data frame containing the group names, the variance wit
 estimates of rwg based on multiple null response distributions (see LeBreton and Senter, 2008).
 }
 \examples{
-df <- data.frame(subject = c(1:25),
-                 grp = c(rep(1,5), rep(2,5),
-                         rep(3,8), rep(4,3),
-                         rep(5,4)),
-                 x1 = c(2, 1, 1, 1, 1,
-                        1, 2, 3, 4, 5,
-                        1, 2, 1, 2, 1, 2, 1, 2,
-                        1, 3, 5,
-                        2, 3, 3, 4),
-                 x2 = c(1, 1, 1, 2, 2,
-                        1, 2, 3, 4, 5,
-                        2, 2, 2, 2, 1, 1, 1, 1,
-                        2, 3, 4,
-                        2, 3, 4, 5))
+data(lq2002, package = "multilevel")
+AGGREGATE.DATA(grpid.name = "COMPID", x.name = c("LEAD", "TSIG", "HOSTILE"),
+               data = lq2002, aggr.stat = "mean")
 
-data.aggregation(group = "grp", vars = c("x1", "x2"), data = df, aggr.stat = "mean")
-data.combined
+df.aggr
+df.combined
 }

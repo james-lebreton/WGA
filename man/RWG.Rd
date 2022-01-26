@@ -37,6 +37,5 @@ Link to LeBreton, Moeller, & Senter (2021):
 }
 \examples{
 data(lq2002, package = "multilevel")
-RWGJ(x = lq2002[,c(3)], grpid = lq2002$COMPID, scale = 5, reset = F)
-
+RWG(x = lq2002[,c(3)], grpid = lq2002$COMPID, scale = c(1,5), model = "consensus", reset=FALSE)
 }

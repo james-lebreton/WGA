@@ -22,12 +22,12 @@
 #' @export
 #' @examples
 #' data(lq2002, package = "multilevel")
-#' RWGJ(x = lq2002[,c(3:13)], grpid = lq2002$COMPID, scale = 5, reset = F)
-#'
+#' RWGJ(x = lq2002[,c(3:13)], grpid = lq2002$COMPID,
+#'      scale = c(1,5), reset = FALSE, model = "consensus")
 
 RWGJ <- function (x, grpid, model, scale, reset=F){
   df.all <- data.frame(grpid,x)
-  df.all <- na.exclude(df.all)
+  df.all <- stats::na.exclude(df.all)
   df.grp <- split(df.all[, 2:(ncol(df.all))], df.all$grpid)
   number.of.groups <- length(unique(df.all$grpid))
   grp.name <- unique(df.all$grpid)
@@ -47,7 +47,7 @@ RWGJ <- function (x, grpid, model, scale, reset=F){
   J <- ncol(x)
   mn.var <- lapply(df.grp, function(Q) {
     if (nrow(Q) > 1) {
-      S.mn <- mean(apply(Q, 2, var, na.rm = T))
+      S.mn <- mean(apply(Q, 2, stats::var, na.rm = T))
       S.mn
       }
     else {
@@ -101,21 +101,21 @@ RWGJ <- function (x, grpid, model, scale, reset=F){
       output1[,-c(1:4)][output1[, -c(1:4)] > 1] <- 0
       output2$reset.to.zero = "Yes"
       }
-   d.un <- hist(output1$rwgj.un, xlab = "RWG(J)", ylab = "Frequency",
+   d.un <- graphics::hist(output1$rwgj.un, xlab = "RWG(J)", ylab = "Frequency",
                 main = "Distribution of RWG(J) \n Using Uniform Null")
-   d.ss <- hist(output1$rwgj.ss, xlab = "RWG(J)", ylab = "Frequency",
+   d.ss <- graphics::hist(output1$rwgj.ss, xlab = "RWG(J)", ylab = "Frequency",
                 main = "Distribution of RWG(J) \n Using Slightly Skewed Null")
-   d.ms <- hist(output1$rwgj.ms, xlab = "RWG(J)", ylab = "Frequency",
+   d.ms <- graphics::hist(output1$rwgj.ms, xlab = "RWG(J)", ylab = "Frequency",
                 main = "Distribution of RWG(J) \n Using Moderately Skewed Null")
-   d.hs <- hist(output1$rwgj.hs, xlab = "RWG(J)", ylab = "Frequency",
+   d.hs <- graphics::hist(output1$rwgj.hs, xlab = "RWG(J)", ylab = "Frequency",
                 main = "Distribution of RWG(J) \n Using Heavily Skewed Null")
-  d.tri <- hist(output1$rwgj.tri, xlab = "RWG(J)", ylab = "Frequency",
+  d.tri <- graphics::hist(output1$rwgj.tri, xlab = "RWG(J)", ylab = "Frequency",
                 main = "Distribution of RWG(J) \n Using Triangular Null")
-  d.nor <- hist(output1$rwgj.nor, xlab = "RWG(J)", ylab = "Frequency",
+  d.nor <- graphics::hist(output1$rwgj.nor, xlab = "RWG(J)", ylab = "Frequency",
                 main = "Distribution of RWG(J) \n Using Normal Null")
   output3 <- list(d.un, d.ss, d.ms, d.hs, d.tri, d.nor)
   output4 = psych::describe(output1[,c(2,4:ncol(output1))])
-  output5 = quantile(output1$rwgj.un, probs = c(.00, .10, .20, .30, .40, .50,
+  output5 = stats::quantile(output1$rwgj.un, probs = c(.00, .10, .20, .30, .40, .50,
                                                .60, .70, .80, .90, 1.00))
   return(list(rwgj.descriptives = output4,
               rwgj.un.percentiles = output5,
@@ -124,3 +124,4 @@ RWGJ <- function (x, grpid, model, scale, reset=F){
               rwgj.results = output1,
               rwgj.plots = output3[[]]))
 }
+

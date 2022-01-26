@@ -35,11 +35,9 @@ across all of the groups, b) a data frame containing the group names, group size
 the group-level estimates of awg/awg.j, and c) a histogram plotting the distribution of
 awg/awg.j values.
 
-Link to Brown & Hauenstein:
+Link to Brown and Hauenstein:
 }
 \examples{
 data(lq2002, package = "multilevel")
 AWG(x=lq2002[,c(3)], grpid = lq2002$COMPID, model = "Consensus", scale=c(1,5))
-AWG(x=lq2002[,c(3:13)], grpid = lq2002$COMPID, model = "Consensus", scale=c(1,5))
-NOTE: Requires psych & dplyr
 }

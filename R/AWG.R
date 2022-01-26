@@ -13,8 +13,7 @@
 #' the group-level estimates of awg/awg.j, and c) a histogram plotting the distribution of
 #' awg/awg.j values.
 #'
-#' Link to Brown & Hauenstein:
-#'
+#' Link to Brown and Hauenstein:
 #'
 #' @param x     Either a vector representing a single item used to estimate awg or a matrix
 #'              representing a set of items used to estimate awg.j.
@@ -27,15 +26,10 @@
 #' @examples
 #' data(lq2002, package = "multilevel")
 #' AWG(x=lq2002[,c(3)], grpid = lq2002$COMPID, model = "Consensus", scale=c(1,5))
-#' AWG(x=lq2002[,c(3:13)], grpid = lq2002$COMPID, model = "Consensus", scale=c(1,5))
-#' NOTE: Requires psych & dplyr
-
-data(lq2002, package = "multilevel")
-AWG(x=lq2002$LEAD01, grpid = lq2002$COMPID, model = "consensus", scale = c(1,5))
 
 AWG <- function(x, grpid, model, scale){
   df <- data.frame(grpid = grpid, x)
-  df <- na.exclude(df)
+  df <- stats::na.exclude(df)
   num.items <- ncol(as.matrix(x))
   df.grp <- split(df[, 2:ncol(df)], df$grpid)
   if (ncol(as.matrix(x)) > 1) {
@@ -46,7 +40,7 @@ AWG <- function(x, grpid, model, scale){
           L <- scale[1]
           M <- mean(AW)
           k <- length(AW)
-          awg <- 1 - ((2 * var(AW))/(((H + L) * M - (M^2) - (H * L)) * (k/(k - 1))))
+          awg <- 1 - ((2 * stats::var(AW))/(((H + L) * M - (M^2) - (H * L)) * (k/(k - 1))))
           if (M < ((L * (k - 1) + H)/k))
             awg <- NA
           if (M > ((H * (k - 1) + L)/k))
@@ -61,7 +55,7 @@ AWG <- function(x, grpid, model, scale){
           }
       })
     grp.size <- lapply(df.grp, nrow)
-    mean.item.var <- lapply(lapply(df.grp, var, na.rm=T), mean, na.rm = T)
+    mean.item.var <- lapply(lapply(df.grp, stats::var, na.rm=T), mean, na.rm = T)
     awg.j <- unlist(awg.j)
     grp.name <- names(df.grp)
     grp.size <- unlist(grp.size)
@@ -73,11 +67,11 @@ AWG <- function(x, grpid, model, scale){
                           mean.item.var = round(mean.item.var,2),
                           awg.j = round(awg.j,2))
     output2 <- psych::describe(output1[,c(2,4:ncol(output1))])
-    output3 <- hist(output1$awg.j,
+    output3 <- graphics::hist(output1$awg.j,
                     xlab = "AWG(J)",
                     ylab = "Frequency",
                     main = "Distribution of AWG(J)")
-    output4 <- quantile(output1$awg.j,probs = c(.00, .10, .20, .30, .40, .50,
+    output4 <- stats::quantile(output1$awg.j,probs = c(.00, .10, .20, .30, .40, .50,
                                                 .60, .70, .80, .90, 1.00))
     return(list(awgj.descriptives = output2,
                 awgj.percentiles = output4,
@@ -90,7 +84,7 @@ AWG <- function(x, grpid, model, scale){
     L <- scale[1]
     M <- mean(AW)
     k <- length(AW)
-    awg <- 1 - ((2 * var(AW))/(((H + L) * M - (M^2) - (H * L)) * (k/(k - 1))))
+    awg <- 1 - ((2 * stats::var(AW))/(((H + L) * M - (M^2) - (H * L)) * (k/(k - 1))))
     if (M < ((L * (k - 1) + H)/k))
       awg <- NA
     if (M > ((H * (k - 1) + L)/k))
@@ -101,7 +95,7 @@ AWG <- function(x, grpid, model, scale){
     })
   grp.size <- lapply(df.grp, length)
   grp.name <- names(df.grp)
-  item.var <- lapply(df.grp, var)
+  item.var <- lapply(df.grp, stats::var)
   awg.1 <- unlist(awg.1)
   grp.size <- unlist(grp.size)
   item.var <- unlist(item.var)
@@ -113,11 +107,11 @@ AWG <- function(x, grpid, model, scale){
                         item.var = round(item.var,2),
                         awg = round(awg.1,2))
   output2 <- psych::describe(output1[,c(2,4:ncol(output1))])
-  output3 <- hist(output1$awg,
+  output3 <- graphics::hist(output1$awg,
                   xlab = "AWG",
                   ylab = "Frequency",
                   main = "Distribution of AWG")
-  output4 <- quantile(output1$awg,probs = c(.00, .10, .20, .30, .40, .50,
+  output4 <- stats::quantile(output1$awg,probs = c(.00, .10, .20, .30, .40, .50,
                                               .60, .70, .80, .90, 1.00),
                       na.rm = T)
   return(list(awg.descriptives = output2,

@@ -6,37 +6,29 @@
 #' The output consists of a data frame containing the group names, the variance within each group, and
 #' estimates of rwg based on multiple null response distributions (see LeBreton and Senter, 2008).
 #'
-#' @param grpid Grouping/clustering variable
-#' @param x Items/variables to be aggregated
+#' @param grpid.name Name of the grouping/clustering variable
+#' @param x.name Name(s) of the item(s)/variable(s) to be aggregated
 #' @param data Name of data frame containing group and vars
-#' @param method Name of the function used to aggregate data
+#' @param aggr.stat Name of the function used to aggregate data
 #' @return
 #' @export
 #' @examples
-#' df <- data.frame(subject = c(1:25),
-#'                  grp = c(rep(1,5), rep(2,5),
-#'                          rep(3,8), rep(4,3),
-#'                          rep(5,4)),
-#'                  x1 = c(2, 1, 1, 1, 1,
-#'                         1, 2, 3, 4, 5,
-#'                         1, 2, 1, 2, 1, 2, 1, 2,
-#'                         1, 3, 5,
-#'                         2, 3, 3, 4),
-#'                  x2 = c(1, 1, 1, 2, 2,
-#'                         1, 2, 3, 4, 5,
-#'                         2, 2, 2, 2, 1, 1, 1, 1,
-#'                         2, 3, 4,
-#'                         2, 3, 4, 5))
+#' data(lq2002, package = "multilevel")
+#' AGGREGATE.DATA(grpid.name = "COMPID", x.name = c("LEAD", "TSIG", "HOSTILE"),
+#'                data = lq2002, aggr.stat = "mean")
 #'
-#' data.aggregation(group = "grp", vars = c("x1", "x2"), data = df, aggr.stat = "mean")
-#' data.combined
+#' df.aggr
+#' df.combined
 
-AGGREGATE.DATA <- function(grpid, x, data, aggr.stat) {
+AGGREGATE.DATA <- function(grpid.name, x.name, data, aggr.stat) {
   # create aggregate data frame
-  data.aggr <- stats::aggregate(data[,x],
-                         by=list(data[,grpid]),
-                         FUN=aggr.stat)
-  names(data.aggr)[1] = grpid
+  data.aggr <- stats::aggregate(data[,x.name],
+                                by=list(data[,grpid.name]),
+                                FUN=aggr.stat)
+  colnames(data.aggr)[1] = grpid.name
+  if(length(x.name) == 1)
+    colnames(data.aggr)[2] = x.name
+  names(data.aggr)
   if(aggr.stat=="mean") {
     suffix <- c("", ".mn")
   }
@@ -55,6 +47,8 @@ AGGREGATE.DATA <- function(grpid, x, data, aggr.stat) {
   if(aggr.stat=="max") {
     suffix <- c("", ".max")
   }
-  df.combined <<- merge(data, data.aggr, by = grpid,
+  df.combined <<- merge(data, data.aggr, by = grpid.name,
                         suffixes = suffix)
+  colnames(data.aggr)[-1] <- paste0(colnames(data.aggr)[-1], suffix[2])
+  df.aggr <<- data.aggr
 }

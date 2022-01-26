@@ -7,9 +7,13 @@
 AD(x, grpid, model, scale)
 }
 \arguments{
-\item{x}{Data frame}
+\item{x}{Item on which to estimate AD}
 
 \item{grpid}{Grouping/clustering variable}
+
+\item{model}{User-supplied description of multilevel measurement model (e.g., consensus)}
+
+\item{scale}{Minimum and Maximum Values of the Scale}
 }
 \value{
 Estimates AD
@@ -27,5 +31,5 @@ Link to Burke, Finkelstein, & Dusig (1999):
 }
 \examples{
 data(lq2002, package = "multilevel")
-AD(x = lq2002[,c(3)], grpid = lq2002$COMPID, scale = c(1,5), model = "consensus")
+AD(x = lq2002[ ,c(3:13)], grpid = lq2002$COMPID, scale = c(1,5), model = "consensus")
 }

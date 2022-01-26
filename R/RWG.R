@@ -17,17 +17,18 @@
 #' @param scale Minimum and Maximum Values of the Scale
 #' @param reset Logical option for handling negative estimates of RWG;
 #'              FALSE retains negative values; TRUE resets values to 0
+#'
 #' @return List containing a matrix of the null error values, estimates of RWG, and
 #'         summary of how many negative values were obtained
+#'
 #' @export
 #' @examples
 #' data(lq2002, package = "multilevel")
-#' RWGJ(x = lq2002[,c(3)], grpid = lq2002$COMPID, scale = 5, reset = F)
-#'
+#' RWG(x = lq2002[,c(3)], grpid = lq2002$COMPID, scale = c(1,5), model = "consensus", reset=FALSE)
 
 RWG <- function (x, grpid, model, scale,reset=F){
   df <- data.frame(grpid,x)
-  df <- na.exclude(df)
+  df <- stats::na.exclude(df)
   df.grp <- split(df[,2:ncol(df)], df$grpid)
   number.of.groups <- length(unique(df$grpid))
   grp.name <- unique(df$grpid)
@@ -44,7 +45,7 @@ RWG <- function (x, grpid, model, scale,reset=F){
                                    dimnames = list(rownames = NULL,
                                                    colnames = c("scale.points", "uni", "ss",
                                                                 "ms", "hs", "tri", "nor"))))
-  item.var <- unlist(lapply(df.grp, var))
+  item.var <- unlist(lapply(df.grp, stats::var))
   output1 <- data.frame(grp.name = grp.name,
                        grp.size = grp.size,
                        aggr.model = model,
@@ -78,37 +79,37 @@ RWG <- function (x, grpid, model, scale,reset=F){
       output1[,-c(1:4)][output1[, -c(1:4)] < 0] <- 0
       output2$reset.to.zero = "Yes"
       }
-  d.un <- hist(output1$rwg.un,
+  d.un <- graphics::hist(output1$rwg.un,
                xlab = "RWG",
                ylab = "Frequency",
                main = "Distribution of RWG \n Using Uniform Null")
-  d.ss <- hist(output1$rwg.ss,
+  d.ss <- graphics::hist(output1$rwg.ss,
                xlab = "RWG",
                ylab = "Frequency",
                main = "Distribution of RWG \n Using Slightly Skewed Null")
-  d.ms <- hist(output1$rwg.ms,
+  d.ms <- graphics::hist(output1$rwg.ms,
                xlab = "RWG",
                ylab = "Frequency",
                main = "Distribution of RWG \n Using Moderately Skewed Null")
-  d.ms <- hist(output1$rwg.ms,
+  d.ms <- graphics::hist(output1$rwg.ms,
                xlab = "RWG",
                ylab = "Frequency",
                main = "Distribution of RWG \n Using Moderately Skewed Null")
-  d.hs <- hist(output1$rwg.hs,
+  d.hs <- graphics::hist(output1$rwg.hs,
                xlab = "RWG",
                ylab = "Frequency",
                main = "Distribution of RWG \n Using Heavily Skewed Null")
-  d.tri <- hist(output1$rwg.tri,
+  d.tri <- graphics::hist(output1$rwg.tri,
                 xlab = "RWG",
                 ylab = "Frequency",
                 main = "Distribution of RWG \n Using Triangular Null")
-  d.nor <- hist(output1$rwg.nor,
+  d.nor <- graphics::hist(output1$rwg.nor,
                 xlab = "RWG",
                 ylab = "Frequency",
                 main = "Distribution of RWG \n Using Normal Null")
   output3 <- list(d.un, d.ss, d.ms, d.hs, d.tri, d.nor)
   output4 = psych::describe(output1[,c(2,4:ncol(output1))])
-  output5 = quantile(output1$rwg.un, probs = c(.00, .10, .20, .30, .40, .50,
+  output5 = stats::quantile(output1$rwg.un, probs = c(.00, .10, .20, .30, .40, .50,
                                             .60, .70, .80, .90, 1.00))
   return(list(rwg.descriptives = output4,
               rwg.un.percentiles = output5,
@@ -117,3 +118,4 @@ RWG <- function (x, grpid, model, scale,reset=F){
               rwg.results = output1,
               rwg.plots = output3[[]]))
 }
+

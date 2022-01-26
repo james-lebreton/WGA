@@ -38,5 +38,5 @@ the various estimates of agreement.
 }
 \examples{
 data(lq2002, package = "multilevel")
-WGA(x = lq2002[,c(3:13)], grpid = lq2002$COMPID, scale = 5, model = "consensus", reset = F)
+WGA(x=lq2002[,3], grpid = lq2002$COMPID, scale=c(1,5), model = "consensus", reset = FALSE)
 }
