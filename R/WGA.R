@@ -22,32 +22,28 @@
 #' @return Estimates of within-group agreement
 #' @export
 #' @examples
-#' jdw84 <- read.csv("data/jdw84.csv")
-#' wga.J(data=jdw84, group = "group", items = c("x1", "x2", "x3"))
+#' data(lq2002, package = "multilevel")
+#' WGA(x = lq2002[,c(3:13)], grpid = lq2002$COMPID, scale = 5, model = "consensus", reset = F)
 
 WGA <- function(x, grpid, scale, model, reset = F) {
   source("R/RWG.R")
   source("R/AWG.R")
-  # Run the RWG function & Extract the Group-Level Results
+  source("R/AD.R")
+  source("R/RWGJ.R")
   output.rwg <- RWG(x=x, grpid = grpid, model = model, scale = scale, reset = reset)
   results.rwg <- output.rwg$rwg.results
 
-  # Run the AWG function & extract the group-level results
   output.awg <- AWG(x=x, grpid = grpid, scale = scale, model = model)
   results.awg <- output.awg$awg.results
 
-  # Run Bliese's ad.m function from his multilevel package
-  # And, extract the group-level results
-  results.ad.mean <- ad.m(x=x, grpid = grpid, type = "mean")
-  results.ad.median <- ad.m(x=x, grpid = grpid, type = "median")
+  results.ad.mean <- multilevel::ad.m(x=x, grpid = grpid, type = "mean")
+  results.ad.median <- multilevel::ad.m(x=x, grpid = grpid, type = "median")
   results.ad.mean$AD.M <- round(results.ad.mean$AD.M, 2)
   results.ad.median$AD.M <- round(results.ad.median$AD.M, 2)
 
-  # Combine the two sets of average deviation results
   results.ad <- cbind(results.ad.mean[,c(1,3,2)], results.ad.median[,c(2)])
   names(results.ad) <- c("grp.name", "grp.size", "AD.mean", "AD.median")
 
-  # Combine the remaining sets of output
   output1 <- cbind(results.ad[,], results.awg[,])
   output1<- cbind(output1[,], results.rwg[,])
   output1 <- output1[,c("grp.name", "grp.size", "aggr.model", "num.items", "item.var",

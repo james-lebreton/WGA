@@ -1,14 +1,26 @@
 Package: WGA
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Set of functions for estimating within-group agreement and aggregating data for use in multilevel research.
 Version: 0.1.0
-Author: James M. LeBreton
+Authors@: 
+    person("James", "LeBreton", "jlebreto@gmail.com", role = c("aut", "cre"),
+            comment = c(ORCID = "http://orcid.org/0000-0001-6748-380X") 
 Maintainer: James M. LeBreton <jlebreto@gmail.com>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
-Imports:
-    multilevel,
-    psych
+Description: This package uses the acronym WGA to stand for 'Within-Group Agreement & Aggregation'
+             This package includes functions to aggregate data nested in lower-level 
+             units (e.g., individuals) to higher-level units (e.g., work groups). These functions
+             not only aggregate data (aggregate.data) but merge the newly created aggregate-level
+             variables with the original data frame.  In addition, there are functions for estimating
+             a range of different within-group (i.e., within-unit)  agreement statistics
+             that are frequently used by multilevel researchers to justify data aggregation (rwg, awg, AD).
+Depends: R (>= 4.1.1) 
+Imports: dplyr (>= 1.0.7),
+         multilevel (>= 2.6)
+         psych (>= 2.1.9),
+         stats (>= 4.1.2)
+License: GPL-3
 Encoding: UTF-8
-LazyData: true
+LazyData: false
+RoxygenNote: 7.1.2
+URL: http://github.com/james-lebreton/WGA
+BugReports: http://github.com/james-lebreton/WGA/issues

@@ -21,8 +21,8 @@
 #'         summary of how many negative values were obtained
 #' @export
 #' @examples
-#' multilevel::lq2002
-#' RWG(x = lq2002$LEAD01, grpid = lq2002$COMPID, scale.points = 5, out.of.bounds = F)
+#' data(lq2002, package = "multilevel")
+#' RWGJ(x = lq2002[,c(3:13)], grpid = lq2002$COMPID, scale = 5, reset = F)
 #'
 
 RWGJ <- function (x, grpid, model, scale, reset=F){
@@ -124,6 +124,3 @@ RWGJ <- function (x, grpid, model, scale, reset=F){
               rwgj.results = output1,
               rwgj.plots = output3[[]]))
 }
-
-
-

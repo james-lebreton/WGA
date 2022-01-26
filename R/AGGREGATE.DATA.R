@@ -33,7 +33,7 @@
 
 AGGREGATE.DATA <- function(grpid, x, data, aggr.stat) {
   # create aggregate data frame
-  data.aggr <- aggregate(data[,x],
+  data.aggr <- stats::aggregate(data[,x],
                          by=list(data[,grpid]),
                          FUN=aggr.stat)
   names(data.aggr)[1] = grpid
