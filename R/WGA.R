@@ -54,7 +54,7 @@ WGA <- function(x, grpid, scale, model, reset = F) {
   output2 <- psych::describe(output1[,c(2, 4:ncol(output1))])
   output3 <- output.rwg$rwg.out.of.bounds
   output4 <- output.rwg$rwg.error.variances
-  output5 <- list(output.rwg$rwg.plots[[]], output.rwg$awg.plots[[]])
+  output5 <- list(rwg.plots = output.rwg$rwg.plots[[]], awg.plots = output.awg$awg.plots[[]])
   output6 <- list("rwg.un" = output.rwg$rwg.un.percentiles,
                   "awg.un" = output.awg$awg.percentiles)
   return(list(data.aggreation.model = model,
