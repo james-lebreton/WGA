@@ -23,9 +23,9 @@
 #' @examples
 #' data(lq2002, package = "multilevel")
 #' RWGJ(x = lq2002[,c(3:13)], grpid = lq2002$COMPID,
-#'      scale = c(1,5), reset = FALSE, model = "consensus")
+#'      scale = c(1,5), reset = FALSE, model = "consensus", cutoff = 0.70)
 
-RWGJ <- function (x, grpid, model, scale, reset=F){
+RWGJ <- function (x, grpid, model, scale, reset=F, cutoff){
   df.all <- data.frame(grpid,x)
   df.all <- stats::na.exclude(df.all)
   df.grp <- split(df.all[, 2:(ncol(df.all))], df.all$grpid)
@@ -115,10 +115,28 @@ RWGJ <- function (x, grpid, model, scale, reset=F){
                 main = "Distribution of RWG(J) \n Using Normal Null")
   output3 <- list(d.un, d.ss, d.ms, d.hs, d.tri, d.nor)
   output4 = psych::describe(output1[,c(2,4:ncol(output1))])
-  output5 = stats::quantile(output1$rwgj.un, probs = c(.00, .10, .20, .30, .40, .50,
-                                               .60, .70, .80, .90, 1.00))
+  output5 = list(rwgj.un = stats::quantile(output1$rwgj.un, probs = c(.00, .10, .20, .30, .40, .50,
+                                               .60, .70, .80, .90, 1.00)),
+                 rwgj.ss = stats::quantile(output1$rwgj.ss, probs = c(.00, .10, .20, .30, .40, .50,
+                                                                     .60, .70, .80, .90, 1.00)),
+                 rwgj.ms = stats::quantile(output1$rwgj.ms, probs = c(.00, .10, .20, .30, .40, .50,
+                                                                     .60, .70, .80, .90, 1.00)),
+                 rwgj.hs = stats::quantile(output1$rwgj.hs, probs = c(.00, .10, .20, .30, .40, .50,
+                                                                     .60, .70, .80, .90, 1.00)),
+                 rwgj.tri = stats::quantile(output1$rwgj.tri, probs = c(.00, .10, .20, .30, .40, .50,
+                                                                     .60, .70, .80, .90, 1.00)),
+                 rwgj.nor = stats::quantile(output1$rwgj.nor, probs = c(.00, .10, .20, .30, .40, .50,
+                                                                     .60, .70, .80, .90, 1.00)))
+  output6 = list(rwgj.un.cutoff = round(sum(output1$rwgj.un >= cutoff)/nrow(output1),2),
+                 rwgj.ss.cutoff = round(sum(output1$rwgj.ss >= cutoff)/nrow(output1), 2),
+                 rwgj.ms.cutoff = round(sum(output1$rwgj.ms >= cutoff)/nrow(output1), 2),
+                 rwgj.hs.cutoff = round(sum(output1$rwgj.hs >= cutoff)/nrow(output1), 2),
+                 rwgj.tri.cutoff = round(sum(output1$rwgj.tri >= cutoff)/nrow(output1), 2),
+                 rwgj.nor.cutoff = round(sum(output1$rwgj.nor >= cutoff)/nrow(output1), 2))
+
   return(list(rwgj.descriptives = output4,
-              rwgj.un.percentiles = output5,
+              rwgj.over.cutoff = output6,
+              rwgj.percentiles = output5,
               rwgj.out.of.bounds = output2,
               rwgj.error.variances = null.var[which(null.var == scale.points),],
               rwgj.results = output1,

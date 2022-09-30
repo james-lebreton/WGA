@@ -1,4 +1,4 @@
-#' awg: Agreement Within-Groups
+#' AWG: Agreement Within-Groups
 #'
 #' This function estimates Brown & Hauenstein's (2005) within-group agreement statistic.
 #' For a single item the statistic is denoted awg. For a scaled based on J items, the

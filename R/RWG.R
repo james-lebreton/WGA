@@ -24,9 +24,9 @@
 #' @export
 #' @examples
 #' data(lq2002, package = "multilevel")
-#' RWG(x = lq2002[,c(3)], grpid = lq2002$COMPID, scale = c(1,5), model = "consensus", reset=FALSE)
+#' RWG(x = lq2002[,c(3)], grpid = lq2002$COMPID, scale = c(1,5), model = "consensus", reset=FALSE, cutoff=0.50)
 
-RWG <- function (x, grpid, model, scale,reset=F){
+RWG <- function (x, grpid, model, scale, reset=F, cutoff){
   df <- data.frame(grpid,x)
   df <- stats::na.exclude(df)
   df.grp <- split(df[,2:ncol(df)], df$grpid)
@@ -78,7 +78,7 @@ RWG <- function (x, grpid, model, scale,reset=F){
     {
       output1[,-c(1:4)][output1[, -c(1:4)] < 0] <- 0
       output2$reset.to.zero = "Yes"
-      }
+    }
   d.un <- graphics::hist(output1$rwg.un,
                xlab = "RWG",
                ylab = "Frequency",
@@ -109,13 +109,41 @@ RWG <- function (x, grpid, model, scale,reset=F){
                 main = "Distribution of RWG \n Using Normal Null")
   output3 <- list(d.un, d.ss, d.ms, d.hs, d.tri, d.nor)
   output4 = psych::describe(output1[,c(2,4:ncol(output1))])
-  output5 = stats::quantile(output1$rwg.un, probs = c(.00, .10, .20, .30, .40, .50,
-                                            .60, .70, .80, .90, 1.00))
+  output5 = list(rwg.un = stats::quantile(output1$rwg.un, probs = c(.00, .10, .20, .30, .40, .50,
+                                            .60, .70, .80, .90, 1.00)),
+                 rwg.ss = stats::quantile(output1$rwg.ss, probs = c(.00, .10, .20, .30, .40, .50,
+                                                           .60, .70, .80, .90, 1.00)),
+                 rwg.ms = stats::quantile(output1$rwg.ms, probs = c(.00, .10, .20, .30, .40, .50,
+                                                           .60, .70, .80, .90, 1.00)),
+                 rwg.hs = stats::quantile(output1$rwg.hs, probs = c(.00, .10, .20, .30, .40, .50,
+                                                           .60, .70, .80, .90, 1.00)),
+                 rwg.tri = stats::quantile(output1$rwg.tri, probs = c(.00, .10, .20, .30, .40, .50,
+                                                           .60, .70, .80, .90, 1.00)),
+                 rwg.nor = stats::quantile(output1$rwg.nor, probs = c(.00, .10, .20, .30, .40, .50,
+                                                           .60, .70, .80, .90, 1.00)))
+  output6 = list(rwg.un.cutoff = round(sum(output1$rwg.un >= cutoff)/nrow(output1),2),
+                 rwg.ss.cutoff = round(sum(output1$rwg.ss >= cutoff)/nrow(output1), 2),
+                 rwg.ms.cutoff = round(sum(output1$rwg.ms >= cutoff)/nrow(output1), 2),
+                 rwg.hs.cutoff = round(sum(output1$rwg.hs >= cutoff)/nrow(output1), 2),
+                 rwg.tri.cutoff = round(sum(output1$rwg.tri >= cutoff)/nrow(output1), 2),
+                 rwg.nor.cutoff = round(sum(output1$rwg.nor >= cutoff)/nrow(output1), 2))
+  null.model <- lme(x ~ 1, random =~1|grpid)
+  var.pooled <- as.numeric(VarCorr(null.model)[2,1])
+  rwgp.un <- round(1-(var.pooled/null.var[which(null.var$scale.points == scale.points), 2]),2)
+  rwgp.ss <- round(1-(var.pooled/null.var[which(null.var$scale.points == scale.points), 3]),2)
+  rwgp.ms <- round(1-(var.pooled/null.var[which(null.var$scale.points == scale.points), 4]),2)
+  rwgp.hs <- round(1-(var.pooled/null.var[which(null.var$scale.points == scale.points), 5]),2)
+  rwgp.tri <- round(1-(var.pooled/null.var[which(null.var$scale.points == scale.points), 6]),2)
+  rwgp.nor <- round(1-(var.pooled/null.var[which(null.var$scale.points == scale.points), 7]),2)
+  output7 <- list(rwgp.un=rwgp.un, rwgp.ss=rwgp.ss, rwgp.ms=rwgp.ms, rwgp.hs=rwgp.hs,
+                  rwgp.tri=rwgp.tri, rwgp.nor=rwgp.nor)
   return(list(rwg.descriptives = output4,
-              rwg.un.percentiles = output5,
-              rwg.out.of.bounds = output2,
+              rwg.over.cutoff = output6,
+              rwg.percentiles = output5,
+              rwg.out.of.range = output2,
               rwg.error.variances = null.var[which(null.var == scale.points),],
               rwg.results = output1,
-              rwg.plots = output3[[]]))
+              rwg.plots = output3[[]],
+              rwg.p = output7))
 }
 

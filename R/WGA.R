@@ -25,9 +25,9 @@
 #' data(lq2002, package = "multilevel")
 #' WGA(x=lq2002[,3], grpid = lq2002$COMPID, scale=c(1,5), model = "consensus", reset = FALSE)
 
-WGA <- function(x, grpid, scale, model, reset = F) {
+WGA <- function(x, grpid, scale, model, reset = F,cutoff) {
   # Run the RWG function & Extract the Group-Level Results
-  output.rwg <- RWG(x=x, grpid = grpid, model = model, scale = scale, reset = reset)
+  output.rwg <- RWG(x=x, grpid = grpid, model = model, scale = scale, reset = reset, cutoff=cutoff)
   results.rwg <- output.rwg$rwg.results
 
   # Run the AWG function & extract the group-level results
@@ -57,8 +57,10 @@ WGA <- function(x, grpid, scale, model, reset = F) {
   output5 <- list(rwg.plots = output.rwg$rwg.plots[[]], awg.plots = output.awg$awg.plots[[]])
   output6 <- list("rwg.un" = output.rwg$rwg.un.percentiles,
                   "awg.un" = output.awg$awg.percentiles)
+  output7 <- output.rwg$rwg.over.cutoff
   return(list(data.aggreation.model = model,
               wga.descriptives = output2,
+              rwg.over.cutoff = output7,
               rwg.out.of.bounds = output3,
               rwg.error.variances = output4,
               wga.percentiles = output6,
