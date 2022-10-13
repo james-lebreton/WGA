@@ -2,7 +2,7 @@
 % Please edit documentation in R/AWG.R
 \name{AWG}
 \alias{AWG}
-\title{awg: Agreement Within-Groups}
+\title{AWG: Agreement Within-Groups}
 \usage{
 AWG(x, grpid, model, scale)
 }

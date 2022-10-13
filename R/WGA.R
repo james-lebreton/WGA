@@ -17,8 +17,7 @@
 #' @param scale A vector with the lower and upper response options (e.g., c(1,5))
 #'              for a five-point scale from strongly disagree to strongly agree.
 #' @param model User-supplied description of multilevel measurement model (e.g., consensus)
-#' @param reset Logical option for handling negative estimates of RWG;
-#'              FALSE retains negative values; TRUE resets values to 0
+#' @param reset Logical option for handling negative estimates of RWG; FALSE retains negative values; TRUE resets values to 0
 #' @param cutoff User-supplied cutoff value for justifying data aggregation
 #' @return Estimates of within-group agreement
 #' @export

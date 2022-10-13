@@ -1,7 +1,7 @@
 Package: WGA
 Type: Package
 Title: WGA: Within-Group Agreement & Data Aggregation
-Version: 0.1.0
+Version: 0.1.1
 Author: James M. LeBreton
 Maintainer: James M. LeBreton <jlebreto@gmail.com>
 Description: This package uses the acronym WGA to stand for 'Within-Group Agreement & Aggregation'
@@ -20,7 +20,7 @@ Imports: graphics (>= 4.2.0),
 License: GPL-3
 Encoding: UTF-8
 LazyData: false
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.1
 URL: http://github.com/james-lebreton/WGA
 BugReports: http://github.com/james-lebreton/WGA/issues
 Suggests: 

@@ -21,7 +21,8 @@
 #' @export
 #' @examples
 #' data(lq2002, package = "multilevel")
-#' RWG(x = lq2002[,c(3)], grpid = lq2002$COMPID, model = "consensus", scale = c(1,5), reset=FALSE, cutoff)
+#' RWG(x = lq2002[,c(3)], grpid = lq2002$COMPID, model = "consensus",
+#'     scale = c(1,5), reset=FALSE, cutoff=.50)
 
 RWG <- function (x, grpid, model, scale, reset=F, cutoff){
   df <- data.frame(grpid,x)

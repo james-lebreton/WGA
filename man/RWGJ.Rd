@@ -4,23 +4,23 @@
 \alias{RWGJ}
 \title{RWGJ: Within-Group Agreement (multiple items)}
 \usage{
-RWGJ(x, grpid, model, scale, reset = F)
+RWGJ(x, grpid, scale, model, reset = F, cutoff)
 }
 \arguments{
 \item{x}{Items to use when estimating RWGJ}
 
 \item{grpid}{Grouping/clustering variable}
 
-\item{model}{User-supplied description of multilevel measurement model (e.g., consensus)}
-
 \item{scale}{Number of scale points ranging from 5 to 11}
 
-\item{reset}{Logical option for handling negative estimates of RWG;
-FALSE retains negative values; TRUE resets values to 0}
+\item{model}{User-supplied description of multilevel measurement model (e.g., consensus)}
+
+\item{reset}{Logical option for handling negative estimates of RWG; FALSE retains negative values; TRUE resets values to 0}
+
+\item{cutoff}{User-supplied cutoff value for justifying data aggregation}
 }
 \value{
-List containing a matrix of the null error values, estimates of RWG, and
-        summary of how many negative values were obtained
+List containing results of analysis.
 }
 \description{
 This function estimates James, Demaree, & Wolf's (1984) within-group agreement statistic
@@ -37,6 +37,6 @@ Link to LeBreton, Moeller, & Senter (2021):
 }
 \examples{
 data(lq2002, package = "multilevel")
-RWGJ(x = lq2002[,c(3:13)], grpid = lq2002$COMPID,
-     scale = c(1,5), reset = FALSE, model = "consensus")
+RWGJ(x = lq2002[,c(3:13)], grpid = lq2002$COMPID, model = "consensus",
+     scale = c(1,5), reset = TRUE, cutoff=0.50)
 }

@@ -4,19 +4,19 @@
 \alias{AGGREGATE.DATA}
 \title{AGGREGATE.DATA: aggregate data and merge into combined data frame}
 \usage{
-AGGREGATE.DATA(grpid.name, x.name, data, aggr.stat)
+AGGREGATE.DATA(grpid, x, data, aggr.stat)
 }
 \arguments{
-\item{grpid.name}{Name of the grouping/clustering variable}
+\item{grpid}{Name of the grouping/clustering variable}
 
-\item{x.name}{Name(s) of the item(s)/variable(s) to be aggregated}
+\item{x}{Name(s) of the item(s)/variable(s) to be aggregated}
 
 \item{data}{Name of data frame containing group and vars}
 
 \item{aggr.stat}{Name of the function used to aggregate data}
 }
 \value{
-
+Generates two data files; df.aggr is the aggregate-level file & df.combined is the merged file
 }
 \description{
 This function augments the aggregate.R base function.
@@ -28,9 +28,6 @@ estimates of rwg based on multiple null response distributions (see LeBreton and
 }
 \examples{
 data(lq2002, package = "multilevel")
-AGGREGATE.DATA(grpid.name = "COMPID", x.name = c("LEAD", "TSIG", "HOSTILE"),
+AGGREGATE.DATA(grpid = "COMPID", x = c("LEAD", "TSIG", "HOSTILE"),
                data = lq2002, aggr.stat = "mean")
-
-df.aggr
-df.combined
 }

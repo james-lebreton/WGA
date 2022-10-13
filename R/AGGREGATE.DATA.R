@@ -14,7 +14,8 @@
 #' @export
 #' @examples
 #' data(lq2002, package = "multilevel")
-#' AGGREGATE.DATA(grpid = "COMPID", x = c("LEAD", "TSIG", "HOSTILE"), data = lq2002, aggr.stat = "mean")
+#' AGGREGATE.DATA(grpid = "COMPID", x = c("LEAD", "TSIG", "HOSTILE"),
+#'                data = lq2002, aggr.stat = "mean")
 
 AGGREGATE.DATA <- function(grpid, x, data, aggr.stat) {
   # create aggregate data frame

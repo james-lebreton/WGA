@@ -4,7 +4,7 @@
 \alias{WGA}
 \title{WGA: Within-Group Agreement}
 \usage{
-WGA(x, grpid, scale, model, reset = F)
+WGA(x, grpid, scale, model, reset = F, cutoff = 0.5)
 }
 \arguments{
 \item{x}{A vector representing a single item or a matrix representing a scale of interest.
@@ -18,8 +18,9 @@ for a five-point scale from strongly disagree to strongly agree.}
 
 \item{model}{User-supplied description of multilevel measurement model (e.g., consensus)}
 
-\item{reset}{Logical option for handling negative estimates of RWG;
-FALSE retains negative values; TRUE resets values to 0}
+\item{reset}{Logical option for handling negative estimates of RWG; FALSE retains negative values; TRUE resets values to 0}
+
+\item{cutoff}{User-supplied cutoff value for justifying data aggregation}
 }
 \value{
 Estimates of within-group agreement
