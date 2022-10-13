@@ -15,17 +15,15 @@
 #' @param grpid Grouping/clustering variable
 #' @param scale Number of scale points ranging from 5 to 11
 #' @param model User-supplied description of multilevel measurement model (e.g., consensus)
-#' @param reset Logical option for handling negative estimates of RWG;
-#'              FALSE retains negative values; TRUE resets values to 0
-#' @param cutoff User-supplied cutoff value for RWG(J)
-#' @return List containing a matrix of the null error values, estimates of RWG, and
-#'         summary of how many negative values were obtained
+#' @param reset Logical option for handling negative estimates of RWG; FALSE retains negative values; TRUE resets values to 0
+#' @param cutoff User-supplied cutoff value for justifying data aggregation
+#' @return List containing results of analysis.
 #' @export
 #' @examples
 #' data(lq2002, package = "multilevel")
-#' RWGJ(x = lq2002[,c(3:13)], grpid = lq2002$COMPID, scale = c(1,5), reset = T, model = "consensus", cutoff = 0.70)
+#' RWGJ(x = lq2002[,c(3:13)], grpid = lq2002$COMPID, model = "consensus", scale = c(1,5), reset = T, cutoff)
 
-RWGJ <- function(x, grpid, scale, model, reset = F,cutoff) {
+RWGJ <- function(x, grpid, scale, model, reset = F, cutoff) {
   df.all <- data.frame(grpid,x)
   df.all <- stats::na.exclude(df.all)
   df.grp <- split(df.all[, 2:(ncol(df.all))], df.all$grpid)

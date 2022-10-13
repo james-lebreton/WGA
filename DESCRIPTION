@@ -1,9 +1,9 @@
 Package: WGA
 Type: Package
 Title: WGA: Within-Group Agreement & Data Aggregation
-Version:  0.1.0
-Author:      James M. LeBreton
-Maintainer:  James M. LeBreton <jlebreto@gmail.com>
+Version: 0.1.0
+Author: James M. LeBreton
+Maintainer: James M. LeBreton <jlebreto@gmail.com>
 Description: This package uses the acronym WGA to stand for 'Within-Group Agreement & Aggregation'
              This package includes functions to aggregate data nested in lower-level 
              units (e.g., individuals) to higher-level units (e.g., work groups). These functions
@@ -11,15 +11,21 @@ Description: This package uses the acronym WGA to stand for 'Within-Group Agreem
              variables with the original data frame.  In addition, there are functions for estimating
              a range of different within-group (i.e., within-unit)  agreement statistics
              that are frequently used by multilevel researchers to justify data aggregation (rwg, awg, AD).
-Depends: R (>= 4.1.0) 
-Imports: dplyr (>= 1.0.7),
-         graphics (>= 4.1.2),
-         multilevel (>= 2.6),
-         psych (>= 2.1.9),
-         stats (>= 4.1.2)
+Depends: R (>= 4.2.0) 
+Imports: graphics (>= 4.2.0),
+         multilevel (>= 2.7),
+         nlme(>= 3.1-157),
+         psych (>= 2.2.9),
+         stats (>= 4.2.0)
 License: GPL-3
 Encoding: UTF-8
 LazyData: false
 RoxygenNote: 7.1.2
 URL: http://github.com/james-lebreton/WGA
 BugReports: http://github.com/james-lebreton/WGA/issues
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+VignetteBuilder: knitr

@@ -11,20 +11,17 @@
 #' Link to LeBreton & Senter (2008):
 #' Link to LeBreton, Moeller, & Senter (2021):
 #'
-#' @param grpid Grouping/clustering variable
 #' @param x Item on which to estimate RWG
+#' @param grpid Grouping/clustering variable
 #' @param model User-supplied description of multilevel measurement model (e.g., consensus)
 #' @param scale Minimum and Maximum Values of the Scale
-#' @param reset Logical option for handling negative estimates of RWG;
-#'              FALSE retains negative values; TRUE resets values to 0
-#'
-#' @return List containing a matrix of the null error values, estimates of RWG, and
-#'         summary of how many negative values were obtained
-#'
+#' @param reset Logical option for handling negative estimates of RWG; FALSE retains negative values; TRUE resets values to 0
+#' @param cutoff User-supplied cutoff for justifying data aggregation
+#' @return List containing results of analysis
 #' @export
 #' @examples
 #' data(lq2002, package = "multilevel")
-#' RWG(x = lq2002[,c(3)], grpid = lq2002$COMPID, scale = c(1,5), model = "consensus", reset=FALSE, cutoff=0.50)
+#' RWG(x = lq2002[,c(3)], grpid = lq2002$COMPID, model = "consensus", scale = c(1,5), reset=FALSE, cutoff)
 
 RWG <- function (x, grpid, model, scale, reset=F, cutoff){
   df <- data.frame(grpid,x)
@@ -128,7 +125,7 @@ RWG <- function (x, grpid, model, scale, reset=F, cutoff){
                  rwg.tri.cutoff = round(sum(output1$rwg.tri >= cutoff)/nrow(output1), 2),
                  rwg.nor.cutoff = round(sum(output1$rwg.nor >= cutoff)/nrow(output1), 2))
   null.model <- nlme::lme(x ~ 1, random =~1|grpid)
-  var.pooled <- as.numeric(VarCorr(null.model)[2,1])
+  var.pooled <- as.numeric(nlme::VarCorr(null.model)[2,1])
   rwgp.un <- round(1-(var.pooled/null.var[which(null.var$scale.points == scale.points), 2]),2)
   rwgp.ss <- round(1-(var.pooled/null.var[which(null.var$scale.points == scale.points), 3]),2)
   rwgp.ms <- round(1-(var.pooled/null.var[which(null.var$scale.points == scale.points), 4]),2)

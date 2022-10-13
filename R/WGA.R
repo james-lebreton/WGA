@@ -19,13 +19,14 @@
 #' @param model User-supplied description of multilevel measurement model (e.g., consensus)
 #' @param reset Logical option for handling negative estimates of RWG;
 #'              FALSE retains negative values; TRUE resets values to 0
+#' @param cutoff User-supplied cutoff value for justifying data aggregation
 #' @return Estimates of within-group agreement
 #' @export
 #' @examples
 #' data(lq2002, package = "multilevel")
 #' WGA(x=lq2002[,3], grpid = lq2002$COMPID, scale=c(1,5), model = "consensus", reset = FALSE)
 
-WGA <- function(x, grpid, scale, model, reset = F,cutoff) {
+WGA <- function(x, grpid, scale, model, reset = F,cutoff=.50) {
   # Run the RWG function & Extract the Group-Level Results
   output.rwg <- RWG(x=x, grpid = grpid, model = model, scale = scale, reset = reset, cutoff=cutoff)
   results.rwg <- output.rwg$rwg.results
