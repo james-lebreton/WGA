@@ -127,7 +127,7 @@ RWG <- function (x, grpid, model, scale, reset=F, cutoff){
                  rwg.hs.cutoff = round(sum(output1$rwg.hs >= cutoff)/nrow(output1), 2),
                  rwg.tri.cutoff = round(sum(output1$rwg.tri >= cutoff)/nrow(output1), 2),
                  rwg.nor.cutoff = round(sum(output1$rwg.nor >= cutoff)/nrow(output1), 2))
-  null.model <- lme(x ~ 1, random =~1|grpid)
+  null.model <- nlme::lme(x ~ 1, random =~1|grpid)
   var.pooled <- as.numeric(VarCorr(null.model)[2,1])
   rwgp.un <- round(1-(var.pooled/null.var[which(null.var$scale.points == scale.points), 2]),2)
   rwgp.ss <- round(1-(var.pooled/null.var[which(null.var$scale.points == scale.points), 3]),2)

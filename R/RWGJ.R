@@ -11,21 +11,21 @@
 #' Link to LeBreton & Senter (2008):
 #' Link to LeBreton, Moeller, & Senter (2021):
 #'
-#' @param grpid Grouping/clustering variable
 #' @param x Items to use when estimating RWGJ
-#' @param model User-supplied description of multilevel measurement model (e.g., consensus)
+#' @param grpid Grouping/clustering variable
 #' @param scale Number of scale points ranging from 5 to 11
+#' @param model User-supplied description of multilevel measurement model (e.g., consensus)
 #' @param reset Logical option for handling negative estimates of RWG;
 #'              FALSE retains negative values; TRUE resets values to 0
+#' @param cutoff User-supplied cutoff value for RWG(J)
 #' @return List containing a matrix of the null error values, estimates of RWG, and
 #'         summary of how many negative values were obtained
 #' @export
 #' @examples
 #' data(lq2002, package = "multilevel")
-#' RWGJ(x = lq2002[,c(3:13)], grpid = lq2002$COMPID,
-#'      scale = c(1,5), reset = FALSE, model = "consensus", cutoff = 0.70)
+#' RWGJ(x = lq2002[,c(3:13)], grpid = lq2002$COMPID, scale = c(1,5), reset = T, model = "consensus", cutoff = 0.70)
 
-RWGJ <- function (x, grpid, model, scale, reset=F, cutoff){
+RWGJ <- function(x, grpid, scale, model, reset = F,cutoff) {
   df.all <- data.frame(grpid,x)
   df.all <- stats::na.exclude(df.all)
   df.grp <- split(df.all[, 2:(ncol(df.all))], df.all$grpid)
@@ -50,11 +50,13 @@ RWGJ <- function (x, grpid, model, scale, reset=F, cutoff){
       S.mn <- mean(apply(Q, 2, stats::var, na.rm = T))
       S.mn
       }
-    else {
-      S.mn <- NA
-      S.mn
+    else
+      {
+        S.mn <- NA
+        S.mn
+        }
     }
-  })
+    )
   mn.var <- unlist(mn.var)
   output1 <- data.frame(grp.name = grp.name,
                         grp.size = grp.size,
@@ -101,33 +103,33 @@ RWGJ <- function (x, grpid, model, scale, reset=F, cutoff){
       output1[,-c(1:4)][output1[, -c(1:4)] > 1] <- 0
       output2$reset.to.zero = "Yes"
       }
-   d.un <- graphics::hist(output1$rwgj.un, xlab = "RWG(J)", ylab = "Frequency",
-                main = "Distribution of RWG(J) \n Using Uniform Null")
-   d.ss <- graphics::hist(output1$rwgj.ss, xlab = "RWG(J)", ylab = "Frequency",
-                main = "Distribution of RWG(J) \n Using Slightly Skewed Null")
-   d.ms <- graphics::hist(output1$rwgj.ms, xlab = "RWG(J)", ylab = "Frequency",
-                main = "Distribution of RWG(J) \n Using Moderately Skewed Null")
-   d.hs <- graphics::hist(output1$rwgj.hs, xlab = "RWG(J)", ylab = "Frequency",
-                main = "Distribution of RWG(J) \n Using Heavily Skewed Null")
+  d.un <- graphics::hist(output1$rwgj.un, xlab = "RWG(J)", ylab = "Frequency",
+                         main = "Distribution of RWG(J) \n Using Uniform Null")
+  d.ss <- graphics::hist(output1$rwgj.ss, xlab = "RWG(J)", ylab = "Frequency",
+                         main = "Distribution of RWG(J) \n Using Slightly Skewed Null")
+  d.ms <- graphics::hist(output1$rwgj.ms, xlab = "RWG(J)", ylab = "Frequency",
+                         main = "Distribution of RWG(J) \n Using Moderately Skewed Null")
+  d.hs <- graphics::hist(output1$rwgj.hs, xlab = "RWG(J)", ylab = "Frequency",
+                         main = "Distribution of RWG(J) \n Using Heavily Skewed Null")
   d.tri <- graphics::hist(output1$rwgj.tri, xlab = "RWG(J)", ylab = "Frequency",
-                main = "Distribution of RWG(J) \n Using Triangular Null")
+                          main = "Distribution of RWG(J) \n Using Triangular Null")
   d.nor <- graphics::hist(output1$rwgj.nor, xlab = "RWG(J)", ylab = "Frequency",
-                main = "Distribution of RWG(J) \n Using Normal Null")
+                          main = "Distribution of RWG(J) \n Using Normal Null")
   output3 <- list(d.un, d.ss, d.ms, d.hs, d.tri, d.nor)
   output4 = psych::describe(output1[,c(2,4:ncol(output1))])
   output5 = list(rwgj.un = stats::quantile(output1$rwgj.un, probs = c(.00, .10, .20, .30, .40, .50,
-                                               .60, .70, .80, .90, 1.00)),
+                                                                      .60, .70, .80, .90, 1.00)),
                  rwgj.ss = stats::quantile(output1$rwgj.ss, probs = c(.00, .10, .20, .30, .40, .50,
-                                                                     .60, .70, .80, .90, 1.00)),
+                                                                      .60, .70, .80, .90, 1.00)),
                  rwgj.ms = stats::quantile(output1$rwgj.ms, probs = c(.00, .10, .20, .30, .40, .50,
-                                                                     .60, .70, .80, .90, 1.00)),
+                                                                      .60, .70, .80, .90, 1.00)),
                  rwgj.hs = stats::quantile(output1$rwgj.hs, probs = c(.00, .10, .20, .30, .40, .50,
-                                                                     .60, .70, .80, .90, 1.00)),
+                                                                      .60, .70, .80, .90, 1.00)),
                  rwgj.tri = stats::quantile(output1$rwgj.tri, probs = c(.00, .10, .20, .30, .40, .50,
-                                                                     .60, .70, .80, .90, 1.00)),
+                                                                        .60, .70, .80, .90, 1.00)),
                  rwgj.nor = stats::quantile(output1$rwgj.nor, probs = c(.00, .10, .20, .30, .40, .50,
-                                                                     .60, .70, .80, .90, 1.00)))
-  output6 = list(rwgj.un.cutoff = round(sum(output1$rwgj.un >= cutoff)/nrow(output1),2),
+                                                                        .60, .70, .80, .90, 1.00)))
+  output6 = list(rwgj.un.cutoff = round(sum(output1$rwgj.un >= cutoff)/nrow(output1), 2),
                  rwgj.ss.cutoff = round(sum(output1$rwgj.ss >= cutoff)/nrow(output1), 2),
                  rwgj.ms.cutoff = round(sum(output1$rwgj.ms >= cutoff)/nrow(output1), 2),
                  rwgj.hs.cutoff = round(sum(output1$rwgj.hs >= cutoff)/nrow(output1), 2),
@@ -141,5 +143,7 @@ RWGJ <- function (x, grpid, model, scale, reset=F, cutoff){
               rwgj.error.variances = null.var[which(null.var == scale.points),],
               rwgj.results = output1,
               rwgj.plots = output3[[]]))
-}
+  }
+
+
 

@@ -66,4 +66,4 @@ WGA <- function(x, grpid, scale, model, reset = F,cutoff) {
               wga.percentiles = output6,
               wga.results = output1,
               wga.plots = output5))
-}
+  }
