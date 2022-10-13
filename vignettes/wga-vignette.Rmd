@@ -18,15 +18,17 @@ Our package builds on the *multilevel* package developed by Paul Bliese. However
 By generating a more comprehensive set of results, we hope researchers will use these results to enhance the clarity, transparency, and reproducibility of future multilevel research. Below we provide a brief tutorial on the use of our package. At this point, our package is hosted on GitHub, but we plan to make it available via CRAN, too. 
 
 ### Basic Functions Included with WGA: RWG, RWGJ, AWG, & AD
-To illustrate the different functions, we walk the reader through a simple tutorial.
+To illustrate the different functions, we walk the reader through a simple tutorial. The following code can be pasted into R or RStudio.  Lines 1 and 2 install and load the "devtools" package into the library of active resources. Line 3 installs the "WGA" package.  
+
+1. install.packages("devtools", repos = "http://cran.us.r-project.org")  
+2. library(devtools)  
+3. devtools::install_github("james-lebreton/WGA", force=T)  
+
+Once the "WGA" package is downloaded from github, you may load it into your library of active resources.  
 
 #### Step 1 – Install Packages
 ```{r }
-# install.packages("devtools")
-# library(devtools)
-# install_github("james-lebreton/WGA", force=T)
 library(WGA)
-
 ```
 
 #### Step 2 – Load Data
