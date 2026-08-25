@@ -111,12 +111,13 @@ AWG <- function(x, grpid, model, scale){
                   xlab = "AWG",
                   ylab = "Frequency",
                   main = "Distribution of AWG")
+  invisible(plot(output3))
   output4 <- stats::quantile(output1$awg,probs = c(.00, .10, .20, .30, .40, .50,
-                                              .60, .70, .80, .90, 1.00),
+                                                   .60, .70, .80, .90, 1.00),
                       na.rm = T)
   return(list(awg.descriptives = output2,
               awg.percentiles = output4,
               awg.results = output1,
-              awg.plot = output3[[]]))
+              awg.plot = output3))
 }
 
