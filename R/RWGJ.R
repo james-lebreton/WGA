@@ -23,126 +23,120 @@
 #' data(lq2002, package = "multilevel")
 #' RWGJ(x = lq2002[,c(3:13)], grpid = lq2002$COMPID, model = "consensus",
 #'      scale = c(1,5), reset = TRUE, cutoff=0.50)
-
-RWGJ <- function(x, grpid, scale, model, reset = F, cutoff) {
-  df.all <- data.frame(grpid,x)
+      
+RWGJ <- function (x, grpid, scale, model, reset = FALSE, cutoff) {
+  df.all <- data.frame(grpid, x)
   df.all <- stats::na.exclude(df.all)
-  df.grp <- split(df.all[, 2:(ncol(df.all))], df.all$grpid)
-  number.of.groups <- length(unique(df.all$grpid))
-  grp.name <- unique(df.all$grpid)
-  grp.size <- unlist(lapply(df.grp, nrow))
-  scale.points <- scale[2] - scale[1] + 1
-  null.var <- as.data.frame(matrix(c( 5,	 2.00,	1.34,	0.90,	0.44,	1.32,	1.04,
-                                      6,	 2.92,	1.85,	1.26,	0.69,	1.45,	1.25,
-                                      7,	 4.00,	2.90,	2.14,	1.39,	2.10,	1.40,
-                                      8,	 5.25,	3.47,	2.79,	2.35,	2.81,	1.73,
-                                      9,	 6.67,	5.66,	4.73,	3.16,	3.00,	1.58,
-                                      10,   8.25,	6.30,	5.09,	3.46,	2.89,	1.45,
-                                      11,	10.00,	7.31,	6.32,	4.02,	3.32,	1.40),
-                                   ncol=7, nrow=7, byrow=T,
-                                   dimnames = list(rownames = NULL,
-                                                   colnames = c("scale.points", "uni", "ss",
-                                                                "ms", "hs", "tri", "nor"))))
+  df.grp <- split(df.all[, 2:ncol(df.all)], df.all$grpid)
   J <- ncol(x)
-  mn.var <- lapply(df.grp, function(Q) {
-    if (nrow(Q) > 1) {
-      S.mn <- mean(apply(Q, 2, stats::var, na.rm = T))
-      S.mn
-      }
-    else
-      {
-        S.mn <- NA
-        S.mn
-        }
-    }
-    )
-  mn.var <- unlist(mn.var)
-  output1 <- data.frame(grp.name = grp.name,
-                        grp.size = grp.size,
-                        aggr.model = model,
-                        num.items = J,
-                        mean.item.var=round(mn.var,2))
-  output1$rwgj.un <- round((J*(1-mn.var/null.var[which(null.var$scale.points == scale.points), 2]))/
-                             (J*(1-mn.var/null.var[which(null.var$scale.points == scale.points), 2]) +
-                                mn.var/null.var[which(null.var$scale.points == scale.points), 2]),2)
-  output1$rwgj.ss <- round((J*(1-mn.var/null.var[which(null.var$scale.points == scale.points), 3]))/
-                             (J*(1-mn.var/null.var[which(null.var$scale.points == scale.points), 3]) +
-                                mn.var/null.var[which(null.var$scale.points == scale.points), 3]),2)
-  output1$rwgj.ms <- round((J*(1-mn.var/null.var[which(null.var$scale.points == scale.points), 4]))/
-                             (J*(1-mn.var/null.var[which(null.var$scale.points == scale.points), 4]) +
-                                mn.var/null.var[which(null.var$scale.points == scale.points), 4]),2)
-  output1$rwgj.hs <- round((J*(1-mn.var/null.var[which(null.var$scale.points == scale.points), 5]))/
-                             (J*(1-mn.var/null.var[which(null.var$scale.points == scale.points), 5]) +
-                                mn.var/null.var[which(null.var$scale.points == scale.points), 5]),2)
-  output1$rwgj.tri <- round((J*(1-mn.var/null.var[which(null.var$scale.points == scale.points), 6]))/
-                              (J*(1-mn.var/null.var[which(null.var$scale.points == scale.points), 6]) +
-                                 mn.var/null.var[which(null.var$scale.points == scale.points), 6]),2)
-  output1$rwgj.nor <- round((J*(1-mn.var/null.var[which(null.var$scale.points == scale.points), 7]))/
-                              (J*(1-mn.var/null.var[which(null.var$scale.points == scale.points), 7]) +
-                                 mn.var/null.var[which(null.var$scale.points == scale.points), 7]),2)
-  num.oor.un <- sum(output1[,5] < 0 | output1[,5] > 1)
-  num.oor.ss <- sum(output1[,6] < 0 | output1[,6] > 1)
-  num.oor.ms <- sum(output1[,7] < 0 | output1[,7] > 1)
-  num.oor.hs <- sum(output1[,8] < 0 | output1[,8] > 1)
-  num.oor.tri <- sum(output1[,9] < 0 | output1[,9] > 1)
-  num.oor.nor<- sum(output1[,10] < 0 | output1[,10] > 1)
-  output2 <- data.frame(num.oor.un = num.oor.un,
-                        num.oor.ss = num.oor.ss,
-                        num.oor.ms = num.oor.ms,
-                        num.oor.hs = num.oor.hs,
-                        num.oor.tri = num.oor.tri,
-                        num.oor.nor = num.oor.nor)
-  if(reset ==  F) {
-    output1 <- output1
-    output2$reset.to.zero = "No"
-    }
-  else
-    {
-      output1[,-c(1:4)][output1[, -c(1:4)] < 0] <- 0
-      output1[,-c(1:4)][output1[, -c(1:4)] > 1] <- 0
-      output2$reset.to.zero = "Yes"
-      }
-  d.un <- graphics::hist(output1$rwgj.un, xlab = "RWG(J)", ylab = "Frequency",
-                         main = "Distribution of RWG(J) \n Using Uniform Null")
-  d.ss <- graphics::hist(output1$rwgj.ss, xlab = "RWG(J)", ylab = "Frequency",
-                         main = "Distribution of RWG(J) \n Using Slightly Skewed Null")
-  d.ms <- graphics::hist(output1$rwgj.ms, xlab = "RWG(J)", ylab = "Frequency",
-                         main = "Distribution of RWG(J) \n Using Moderately Skewed Null")
-  d.hs <- graphics::hist(output1$rwgj.hs, xlab = "RWG(J)", ylab = "Frequency",
-                         main = "Distribution of RWG(J) \n Using Heavily Skewed Null")
-  d.tri <- graphics::hist(output1$rwgj.tri, xlab = "RWG(J)", ylab = "Frequency",
-                          main = "Distribution of RWG(J) \n Using Triangular Null")
-  d.nor <- graphics::hist(output1$rwgj.nor, xlab = "RWG(J)", ylab = "Frequency",
-                          main = "Distribution of RWG(J) \n Using Normal Null")
-  output3 <- list(d.un, d.ss, d.ms, d.hs, d.tri, d.nor)
-  output4 = psych::describe(output1[,c(2,4:ncol(output1))])
-  output5 = list(rwgj.un = stats::quantile(output1$rwgj.un, probs = c(.00, .10, .20, .30, .40, .50,
-                                                                      .60, .70, .80, .90, 1.00)),
-                 rwgj.ss = stats::quantile(output1$rwgj.ss, probs = c(.00, .10, .20, .30, .40, .50,
-                                                                      .60, .70, .80, .90, 1.00)),
-                 rwgj.ms = stats::quantile(output1$rwgj.ms, probs = c(.00, .10, .20, .30, .40, .50,
-                                                                      .60, .70, .80, .90, 1.00)),
-                 rwgj.hs = stats::quantile(output1$rwgj.hs, probs = c(.00, .10, .20, .30, .40, .50,
-                                                                      .60, .70, .80, .90, 1.00)),
-                 rwgj.tri = stats::quantile(output1$rwgj.tri, probs = c(.00, .10, .20, .30, .40, .50,
-                                                                        .60, .70, .80, .90, 1.00)),
-                 rwgj.nor = stats::quantile(output1$rwgj.nor, probs = c(.00, .10, .20, .30, .40, .50,
-                                                                        .60, .70, .80, .90, 1.00)))
-  output6 = list(rwgj.un.cutoff = round(sum(output1$rwgj.un >= cutoff)/nrow(output1), 2),
-                 rwgj.ss.cutoff = round(sum(output1$rwgj.ss >= cutoff)/nrow(output1), 2),
-                 rwgj.ms.cutoff = round(sum(output1$rwgj.ms >= cutoff)/nrow(output1), 2),
-                 rwgj.hs.cutoff = round(sum(output1$rwgj.hs >= cutoff)/nrow(output1), 2),
-                 rwgj.tri.cutoff = round(sum(output1$rwgj.tri >= cutoff)/nrow(output1), 2),
-                 rwgj.nor.cutoff = round(sum(output1$rwgj.nor >= cutoff)/nrow(output1), 2))
-
-  return(list(rwgj.descriptives = output4,
-              rwgj.over.cutoff = output6,
-              rwgj.percentiles = output5,
-              rwgj.out.of.bounds = output2,
-              rwgj.error.variances = null.var[which(null.var == scale.points),],
-              rwgj.results = output1,
-              rwgj.plots = output3[[]]))
+  
+  grp.name <- unique(df.all$grpid)
+  grp.size <- vapply(df.grp, nrow, integer(1))
+  scale.points <- scale[2] - scale[1] + 1
+  null.var <- as.data.frame(matrix(c( 5, 2, 1.34, 0.9, 0.44, 1.32, 1.04,
+                                      6, 2.92, 1.85, 1.26, 0.69, 1.45, 1.25,
+                                      7, 4, 2.9, 2.14, 1.39, 2.1, 1.4,
+                                      8, 5.25, 3.47, 2.79, 2.35, 2.81, 1.73,
+                                      9, 6.67, 5.66, 4.73, 3.16, 3, 1.58,
+                                      10, 8.25, 6.3, 5.09, 3.46, 2.89, 1.45,
+                                      11, 10, 7.31, 6.32, 4.02, 3.32, 1.4),
+                                   ncol = 7, byrow = TRUE,
+                                   dimnames = list(NULL, c("scale.points","uni","ss","ms","hs","tri","nor"))))
+  
+  # mean of item variances within each group
+  mn.var <- vapply(df.grp, function(Q) {
+    if (nrow(Q) > 1) mean(apply(Q, 2, stats::var, na.rm = TRUE)) else NA_real_
+  }, numeric(1))
+  
+  nv_row <- which(null.var$scale.points == scale.points)
+  
+  output1 <- data.frame(
+    grp.name = grp.name,
+    grp.size = grp.size,
+    aggr.model = model,
+    num.items = J,
+    mean.item.var = round(mn.var, 2),
+    rwgj.un  = round((J * (1 - mn.var / null.var[nv_row, "uni"])) /
+                       (J * (1 - mn.var / null.var[nv_row, "uni"]) + mn.var / null.var[nv_row, "uni"]), 2),
+    rwgj.ss  = round((J * (1 - mn.var / null.var[nv_row, "ss"])) /
+                       (J * (1 - mn.var / null.var[nv_row, "ss"]) + mn.var / null.var[nv_row, "ss"]), 2),
+    rwgj.ms  = round((J * (1 - mn.var / null.var[nv_row, "ms"])) /
+                       (J * (1 - mn.var / null.var[nv_row, "ms"]) + mn.var / null.var[nv_row, "ms"]), 2),
+    rwgj.hs  = round((J * (1 - mn.var / null.var[nv_row, "hs"])) /
+                       (J * (1 - mn.var / null.var[nv_row, "hs"]) + mn.var / null.var[nv_row, "hs"]), 2),
+    rwgj.tri = round((J * (1 - mn.var / null.var[nv_row, "tri"])) /
+                       (J * (1 - mn.var / null.var[nv_row, "tri"]) + mn.var / null.var[nv_row, "tri"]), 2),
+    rwgj.nor = round((J * (1 - mn.var / null.var[nv_row, "nor"])) /
+                       (J * (1 - mn.var / null.var[nv_row, "nor"]) + mn.var / null.var[nv_row, "nor"]), 2)
+  )
+  
+  # count out-of-range RWG(J) by name (safer than numeric columns)
+  oor <- function(v) sum(v < 0 | v > 1, na.rm = TRUE)
+  output2 <- data.frame(
+    num.oor.un  = oor(output1$rwgj.un),
+    num.oor.ss  = oor(output1$rwgj.ss),
+    num.oor.ms  = oor(output1$rwgj.ms),
+    num.oor.hs  = oor(output1$rwgj.hs),
+    num.oor.tri = oor(output1$rwgj.tri),
+    num.oor.nor = oor(output1$rwgj.nor),
+    reset.to.zero = if (isTRUE(reset)) "Yes" else "No"
+  )
+  
+  if (reset==TRUE) {
+    rwg_cols <- c("rwgj.un","rwgj.ss","rwgj.ms","rwgj.hs","rwgj.tri","rwgj.nor")
+    output1[rwg_cols] <- lapply(output1[rwg_cols], function(v) {
+      v[v < 0 | v > 1] <- 0
+      v
+    })
   }
-
+  
+  # hist() returns "histogram" objects (and plots). Keep the objects in a list.
+  d.un  <- graphics::hist(output1$rwgj.un,  xlab="RWG(J)", ylab="Frequency",
+                          main="Distribution of RWG(J)\nUsing Uniform Null")
+  d.ss  <- graphics::hist(output1$rwgj.ss,  xlab="RWG(J)", ylab="Frequency",
+                          main="Distribution of RWG(J)\nUsing Slightly Skewed Null")
+  d.ms  <- graphics::hist(output1$rwgj.ms,  xlab="RWG(J)", ylab="Frequency",
+                          main="Distribution of RWG(J)\nUsing Moderately Skewed Null")
+  d.hs  <- graphics::hist(output1$rwgj.hs,  xlab="RWG(J)", ylab="Frequency",
+                          main="Distribution of RWG(J)\nUsing Heavily Skewed Null")
+  d.tri <- graphics::hist(output1$rwgj.tri, xlab="RWG(J)", ylab="Frequency",
+                          main="Distribution of RWG(J)\nUsing Triangular Null")
+  d.nor <- graphics::hist(output1$rwgj.nor, xlab="RWG(J)", ylab="Frequency",
+                          main="Distribution of RWG(J)\nUsing Normal Null")
+  output3 <- list(un = d.un, ss = d.ss, ms = d.ms, hs = d.hs, tri = d.tri, nor = d.nor)
+  invisible(lapply(output3, plot))
+  output4 <- psych::describe(output1[, c("grp.size", "num.items",
+                                         "mean.item.var","rwgj.un","rwgj.ss",
+                                         "rwgj.ms","rwgj.hs","rwgj.tri","rwgj.nor")])
+  
+  qtiles <- c(0, .1, .2, .3, .4, .5, .6, .7, .8, .9, 1)
+  output5 <- list(
+    rwgj.un  = stats::quantile(output1$rwgj.un,  probs = qtiles, na.rm = TRUE),
+    rwgj.ss  = stats::quantile(output1$rwgj.ss,  probs = qtiles, na.rm = TRUE),
+    rwgj.ms  = stats::quantile(output1$rwgj.ms,  probs = qtiles, na.rm = TRUE),
+    rwgj.hs  = stats::quantile(output1$rwgj.hs,  probs = qtiles, na.rm = TRUE),
+    rwgj.tri = stats::quantile(output1$rwgj.tri, probs = qtiles, na.rm = TRUE),
+    rwgj.nor = stats::quantile(output1$rwgj.nor, probs = qtiles, na.rm = TRUE)
+  )
+  
+  output6 <- list(
+    rwgj.un.cutoff  = round(mean(output1$rwgj.un  >= cutoff, na.rm = TRUE), 2),
+    rwgj.ss.cutoff  = round(mean(output1$rwgj.ss  >= cutoff, na.rm = TRUE), 2),
+    rwgj.ms.cutoff  = round(mean(output1$rwgj.ms  >= cutoff, na.rm = TRUE), 2),
+    rwgj.hs.cutoff  = round(mean(output1$rwgj.hs  >= cutoff, na.rm = TRUE), 2),
+    rwgj.tri.cutoff = round(mean(output1$rwgj.tri >= cutoff, na.rm = TRUE), 2),
+    rwgj.nor.cutoff = round(mean(output1$rwgj.nor >= cutoff, na.rm = TRUE), 2)
+  )
+  
+  return(list(
+    rwgj.descriptives   = output4,
+    rwgj.over.cutoff    = output6,
+    rwgj.percentiles    = output5,
+    rwgj.out.of.bounds  = output2,
+    rwgj.error.variances= null.var[which(null.var$scale.points == scale.points), ],
+    rwgj.results        = output1,
+    rwgj.plots          = output3      # <- return the whole list (no [[]])
+  ))
+}
 
 
